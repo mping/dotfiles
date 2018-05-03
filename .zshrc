@@ -107,9 +107,29 @@ else
 	alias ls='LC_COLLATE=C ls -lFha -G --group-directories-first --color '
 fi
 
-
+# git
 GIT_COMMAND=$(which git)
 alias dotfiles="$GIT_COMMAND --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
+
+# git aliases
+runGitAlias() {
+  git config --global alias.lg   "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+  git config --global alias.st   "status"
+  git config --global alias.pl   "pull"
+  git config --global alias.p    "push"
+  git config --global alias.c    "commit -v"
+  git config --global alias.ca   "commit -v -a"
+  git config --global alias.b    "branch"
+  git config --global alias.co   "checkout"
+  git config --global alias.cob  "checkout -b"
+  git config --global alias.log  "log"
+  git config --global alias.d    "diff --color --ignore-space-at-eol -b -w --ignore-blank-lines"
+  git config --global alias.dd   "diff --color-words --word-diff-regex='[A-z0-9_]+|[^[:space:]]' --ignore-blank-lines"
+  git config --global alias.dw   "diff -w --word-diff=color --word-diff-regex=."
+  git config --global alias.stap "stash && git stash apply"
+  git config --global alias.sc   "diff --name-only --diff-filter=U"
+  git config --global core.editor "subl -n -w"
+}
 
 
 # some more ls aliases
@@ -127,6 +147,11 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 # Emacs
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	# > brew install emacs
+	# > ln -s /usr/local/Cellar/emacs/25.3/Emacs.app /Applications
+	export PATH="/usr/local/Cellar/emacs/25.3/bin/:$PATH"
+fi
 export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient"                     # $EDITOR should open in terminal
 export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI with non-daemon as alternate
