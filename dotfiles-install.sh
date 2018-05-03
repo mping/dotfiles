@@ -2,7 +2,7 @@
 
 set -e
 
-git clone --bare https://bitbucket.org/durdn/dotfiles.git $HOME/.dotfiles
+git clone --bare git@github.com:mping/dotfiles.git $HOME/.dotfiles
 function config {
    /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
 }
