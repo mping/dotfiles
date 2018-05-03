@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/home/mping/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -94,11 +94,22 @@ alias zshconfig="subl ~/.zshrc"
 alias ohmyzsh="subl ~/.oh-my-zsh"
 
 alias pserv='python -m SimpleHTTPServer $*'
-alias wget='wget --trust-server-names --no-check-certificate'
-alias ls='LC_COLLATE=C ls -lFha -G --group-directories-first --color '
+alias wget='wget --trust-server-names' #--no-check-certificate'
+
 alias grep='grep --color=always'
 alias less='less -R'
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+# https://stackoverflow.com/questions/394230/how-to-detect-the-os-from-a-bash-script?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	# requires coreutils on mac
+	alias ls='LC_COLLATE=C gls -lFha -G --group-directories-first --color '
+else
+	alias ls='LC_COLLATE=C ls -lFha -G --group-directories-first --color '
+fi
+
+
+GIT_COMMAND=$(which git)
+alias dotfiles="$GIT_COMMAND --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
 
 # some more ls aliases
@@ -135,7 +146,7 @@ fi
 export PATH="$HOME/.sdkman/candidates/java/current/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 
-export SDKMAN_DIR="/home/mping/.sdkman"
+export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # Fzf fuzzy search stuff
