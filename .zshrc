@@ -176,12 +176,12 @@ export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 . "/usr/local/opt/nvm/nvm.sh"
 
-# Ruby & rbenv
-eval "$(rbenv init -)"
-
 # sdkamn
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# Ruby & rbenv
+eval "$(rbenv init -)"
 
 # Fzf fuzzy search stuff
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
