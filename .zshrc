@@ -170,7 +170,16 @@ fi
 
 export PATH="$HOME/.sdkman/candidates/java/current/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 
+# node
+export NVM_DIR="$HOME/.nvm"
+. "/usr/local/opt/nvm/nvm.sh"
+
+# Ruby & rbenv
+eval "$(rbenv init -)"
+
+# sdkamn
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
