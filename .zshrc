@@ -108,6 +108,18 @@ else
 fi
 
 # git
+function makepr() {
+  giturl='github.com'
+  branch=`git rev-parse --abbrev-ref HEAD`
+  remote=`git remote get-url origin`
+  if [[ $remote == https* ]]; then  
+    project=$(echo $remote | sed -e "s/.*$giturl\/\(.*\).git.*/\1/")
+  else
+    project=$(echo $remote | sed 's%^.*:\([^:]*\)\.git$%\1%g')
+  fi
+  open "https://$giturl/$project/compare/$branch?expand=1"
+}
+
 GIT_COMMAND=$(which git)
 alias dotfiles="$GIT_COMMAND --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
