@@ -185,17 +185,23 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 
 # node
-export NVM_DIR="$HOME/.nvm"
-. "/usr/local/opt/nvm/nvm.sh"
+if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
+	export NVM_DIR="$HOME/.nvm"
+	. "/usr/local/opt/nvm/nvm.sh"
+fi
 
-# sdkamn
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# sdkman
+if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
+	export SDKMAN_DIR="$HOME/.sdkman"
+	source "$HOME/.sdkman/bin/sdkman-init.sh"
+fi
 
 # Ruby & rbenv
-eval "$(rbenv init -)"
+type rbenv >/dev/null 2>&1 && eval "$(rbenv init -)"
 
 # Fzf fuzzy search stuff
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f ~/.fzf-functions.zsh ] && source ~/.fzf-functions.zsh
+if [[ -s "$HOME/.fzf.zsh" ]]; then
+	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+	[ -f ~/.fzf-functions.zsh ] && source ~/.fzf-functions.zsh
+fi
 
