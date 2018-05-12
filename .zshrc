@@ -187,13 +187,17 @@ export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 # node
 if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
 	export NVM_DIR="$HOME/.nvm"
-	. "/usr/local/opt/nvm/nvm.sh"
+	. "$NVM_DIR/nvm.sh"
+fi
+if [[ -s "$HOME/nvm/nvm.sh" ]]; then
+	export NVM_DIR="$HOME/.nvm"
+	. "$NVM_DIR/nvm.sh"
 fi
 
 # sdkman
 if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
 	export SDKMAN_DIR="$HOME/.sdkman"
-	source "$HOME/.sdkman/bin/sdkman-init.sh"
+	source "$SDKMAN_DIR/bin/sdkman-init.sh"
 fi
 
 # Ruby & rbenv
