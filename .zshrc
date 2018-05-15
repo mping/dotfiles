@@ -189,7 +189,7 @@ if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
 	export NVM_DIR="$HOME/.nvm"
 	. "$NVM_DIR/nvm.sh"
 fi
-if [[ -s "$HOME/nvm/nvm.sh" ]]; then
+if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
 	export NVM_DIR="$HOME/.nvm"
 	. "$NVM_DIR/nvm.sh"
 fi
@@ -200,7 +200,9 @@ if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
 	source "$SDKMAN_DIR/bin/sdkman-init.sh"
 fi
 
-# Ruby & rbenv
+# Ruby & rbenv - dont forget to install rbenv ruby plugin
+# git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build 
+export PATH="$HOME/.rbenv/bin:$PATH"
 type rbenv >/dev/null 2>&1 && eval "$(rbenv init -)"
 
 # Fzf fuzzy search stuff
