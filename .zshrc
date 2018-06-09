@@ -196,6 +196,7 @@ export SDKMAN_DIR="$HOME/.sdkman"
 eval "$(rbenv init -)"
 
 # Fzf fuzzy search stuff
+export FZF_DEFAULT_OPTS='--extended'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.fzf-functions.zsh ] && source ~/.fzf-functions.zsh
 
