@@ -185,18 +185,30 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 
 # node
-export NVM_DIR="$HOME/.nvm"
-. "/usr/local/opt/nvm/nvm.sh"
+if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
+	export NVM_DIR="$HOME/.nvm"
+	. "$NVM_DIR/nvm.sh"
+fi
+if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
+	export NVM_DIR="$HOME/.nvm"
+	. "$NVM_DIR/nvm.sh"
+fi
 
-# sdkamn
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# sdkman
+if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
+	export SDKMAN_DIR="$HOME/.sdkman"
+	source "$SDKMAN_DIR/bin/sdkman-init.sh"
+fi
 
-# Ruby & rbenv
-eval "$(rbenv init -)"
+# Ruby & rbenv - dont forget to install rbenv ruby plugin
+# git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build 
+export PATH="$HOME/.rbenv/bin:$PATH"
+type rbenv >/dev/null 2>&1 && eval "$(rbenv init -)"
 
 # Fzf fuzzy search stuff
-export FZF_DEFAULT_OPTS='--extended'
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f ~/.fzf-functions.zsh ] && source ~/.fzf-functions.zsh
+if [[ -s "$HOME/.fzf.zsh" ]]; then
+  export FZF_DEFAULT_OPTS='--extended'
+	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+	[ -f ~/.fzf-functions.zsh ] && source ~/.fzf-functions.zsh
+fi
 
