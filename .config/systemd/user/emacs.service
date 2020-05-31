@@ -1,18 +1,14 @@
 [Unit]
-Description=Emacs: the extensible, self-documenting text editor
-
-;; linux: http://blog.refu.co/?p=1296
-;; mac: https://gist.github.com/redinger/1394910
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
 [Service]
 Type=forking
-ExecStartPre=/bin/zsh --login -c 'env > /tmp/.emacs-environment-file'
-EnvironmentFile=-/tmp/.emacs-environment-file
-
 ExecStart=/usr/bin/emacs --daemon
 ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
 Environment=SSH_AUTH_SOCK=%t/keyring/ssh
-Restart=always
+Environment=JAVA_HOME=/home/mping/.asdf/installs/java/adopt-openjdk-10.0.2+13
+Restart=on-failure
 
 [Install]
 WantedBy=default.target
