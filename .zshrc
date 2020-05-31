@@ -7,7 +7,8 @@ export ZSH=$HOME/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="af-magic"
+#ZSH_THEME="af-magic"
+ZSH_THEME=powerlevel10k/powerlevel10k	
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -49,7 +50,10 @@ ZSH_THEME="af-magic"
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
+HIST_STAMPS="mm/dd/yyyy"
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -60,6 +64,8 @@ ZSH_THEME="af-magic"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
+  dotenv
+  autojump
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -92,12 +98,12 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 alias zshconfig="subl ~/.zshrc"
 alias ohmyzsh="subl ~/.oh-my-zsh"
-
-alias pserv='python -m SimpleHTTPServer $*'
 alias wget='wget --trust-server-names' #--no-check-certificate'
 
 alias grep='grep --color=always'
 alias less='less -R'
+alias pbcopy='xsel --clipboard --input'
+alias pbpaste='xsel --clipboard --output'
 
 # https://stackoverflow.com/questions/394230/how-to-detect-the-os-from-a-bash-script?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -117,14 +123,14 @@ function makepr() {
   else
     project=$(echo $remote | sed 's%^.*:\([^:]*\)\.git$%\1%g')
   fi
-  open "https://$giturl/$project/compare/$branch?expand=1"
+  xdg-open "https://$giturl/$project/compare/$branch?expand=1"
 }
 
 GIT_COMMAND=$(which git)
 alias dotfiles="$GIT_COMMAND --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
 # git aliases
-runGitAlias() {
+setupGitAliases() {
   git config --global alias.lg   "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
   git config --global alias.st   "status"
   git config --global alias.pl   "pull"
@@ -169,9 +175,16 @@ export EDITOR="emacsclient"                     # $EDITOR should open in termina
 export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI with non-daemon as alternate
 
 alias demax="emacs --daemon"
+alias wemax="emacsclient -c"
+alias nemax="emacsclient -c -nw"
 alias emax="emacsclient -t"                      # used to be "emacs -nw"
 alias emaxg="emacsclient -c -a emacs"            # new - opens the GUI with alternate non-daemon
 alias semax="sudo emacsclient -t"                # used to be "sudo emacs -nw"
+alias femacs='emacs $(fzf)'
+
+### exoscale stuff
+export EXOSCALE_CERTS_DIR="$HOME/Devel/workspace/exoscale/certificates"
+alias exocurl="curl --cacert $EXOSCALE_CERTS_DIR/ca.pem --key $EXOSCALE_CERTS_DIR/key.pem --cert $EXOSCALE_CERTS_DIR/cert.pem"
 
 # https://stackoverflow.com/questions/367442/getting-emacs-ansi-term-and-zsh-to-play-nicely
 if [ -n "$INSIDE_EMACS" ]; then
@@ -180,35 +193,49 @@ if [ -n "$INSIDE_EMACS" ]; then
   print -P "\033AnSiTc %d"
 fi
 
-export PATH="$HOME/.sdkman/candidates/java/current/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
+alias pgstart="sudo systemctl start postgresql@11-main"
+alias pgstop="sudo systemctl stop postgresql@11-main"
 
-# node
-if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
-	export NVM_DIR="$HOME/.nvm"
-	. "$NVM_DIR/nvm.sh"
-fi
-if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
-	export NVM_DIR="$HOME/.nvm"
-	. "$NVM_DIR/nvm.sh"
+
+# Cargo ASDF
+if [[ -d "/home/mping/.asdf/installs/rust/stable/bin" ]]; then
+	export PATH="$PATH:/home/mping/.asdf/installs/rust/stable/bin"
 fi
 
-# sdkman
-if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
-	export SDKMAN_DIR="$HOME/.sdkman"
-	source "$SDKMAN_DIR/bin/sdkman-init.sh"
+
+# asdf
+if [[ -s "$HOME/.asdf/asdf.sh" ]]; then
+	source "$HOME/.asdf/asdf.sh"
+	source "$HOME/.asdf/completions/asdf.bash"
+
+	asdf_update_java_home() {
+	  local current
+	  if current=$(asdf current java); then
+	    local version=$(echo $current | cut -d '(' -f 1) 
+	    export JAVA_HOME=$(asdf where java) # $version
+	    echo "JAVA_HOME: $JAVA_HOME"
+	  else
+	    echo "No java version set. Type `asdf list-all java` for all versions."
+	  fi
+	}
 fi
 
-# Ruby & rbenv - dont forget to install rbenv ruby plugin
-# git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build 
-export PATH="$HOME/.rbenv/bin:$PATH"
-type rbenv >/dev/null 2>&1 && eval "$(rbenv init -)"
+# Export path with ~/.local/bin
+export PATH=$PATH:~/.local/bin
+
 
 # Fzf fuzzy search stuff
 if [[ -s "$HOME/.fzf.zsh" ]]; then
   export FZF_DEFAULT_OPTS='--extended'
 	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 	[ -f ~/.fzf-functions.zsh ] && source ~/.fzf-functions.zsh
+  
 fi
 
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
+        source /etc/profile.d/vte.sh
+fi

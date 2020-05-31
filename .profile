@@ -29,5 +29,5 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-export PATH="$HOME/.sdkman/candidates/java/current/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
+#export PATH="$HOME/.sdkman/candidates/java/current/bin:$PATH"
+#export PATH="$HOME/.cargo/bin:$PATH"
