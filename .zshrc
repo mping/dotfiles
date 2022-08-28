@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block, everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -96,14 +103,32 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zshconfig="subl ~/.zshrc"
-alias ohmyzsh="subl ~/.oh-my-zsh"
+alias zshconfig="$EDITOR ~/.zshrc"
+alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
 alias wget='wget --trust-server-names' #--no-check-certificate'
 
+alias rg="rg --hidden --glob '!.git'"
 alias grep='grep --color=always'
 alias less='less -R'
 alias pbcopy='xsel --clipboard --input'
 alias pbpaste='xsel --clipboard --output'
+alias adb='docker run --rm -ti --net host sorccu/adb adb'
+alias bs="numfmt --to=iec --suffix=B"
+alias bsi="numfmt --to=iec-i --suffix=B"
+alias iec="numfmt --from=iec --suffix=B"
+alias iec-i="numfmt --from=iec-i --suffix=B"
+
+# utilities
+# https://github.com/sharkdp/bat
+alias cat='batcat --style=plain'
+
+# https://sw.kovidgoyal.net/kitty/faq/
+# ignore: prefer ssh config:
+# Host *
+#  SetEnv TERM=xterm-256color
+# if [[ "$TERM" == "xterm-kitty"* ]]; then
+# alias ssh="kitty +kitten ssh"
+# fi
 
 # https://stackoverflow.com/questions/394230/how-to-detect-the-os-from-a-bash-script?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -146,7 +171,7 @@ setupGitAliases() {
   git config --global alias.dw   "diff -w --word-diff=color --word-diff-regex=."
   git config --global alias.stap "stash && git stash apply"
   git config --global alias.sc   "diff --name-only --diff-filter=U"
-  git config --global core.editor "subl -n -w"
+  git config --global core.editor "code --wait"
 }
 
 
@@ -171,8 +196,12 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	export PATH="/usr/local/Cellar/emacs/25.3/bin/:$PATH"
 fi
 export ALTERNATE_EDITOR=""
-export EDITOR="emacsclient"                     # $EDITOR should open in terminal
-export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI with non-daemon as alternate
+#export EDITOR="emacsclient"                     # $EDITOR should open in terminal
+#export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI with non-daemon as alternate
+
+# use vscode for now
+export EDITOR="code"
+export VISUAL="code"
 
 alias demax="emacs --daemon"
 alias wemax="emacsclient -c"
@@ -182,9 +211,6 @@ alias emaxg="emacsclient -c -a emacs"            # new - opens the GUI with alte
 alias semax="sudo emacsclient -t"                # used to be "sudo emacs -nw"
 alias femacs='emacs $(fzf)'
 
-### exoscale stuff
-export EXOSCALE_CERTS_DIR="$HOME/Devel/workspace/exoscale/certificates"
-alias exocurl="curl --cacert $EXOSCALE_CERTS_DIR/ca.pem --key $EXOSCALE_CERTS_DIR/key.pem --cert $EXOSCALE_CERTS_DIR/cert.pem"
 
 # https://stackoverflow.com/questions/367442/getting-emacs-ansi-term-and-zsh-to-play-nicely
 if [ -n "$INSIDE_EMACS" ]; then
@@ -195,6 +221,11 @@ fi
 
 alias pgstart="sudo systemctl start postgresql@11-main"
 alias pgstop="sudo systemctl stop postgresql@11-main"
+
+# Maven
+# dont use asdf shim so we can override JAVA_HOME for Loom
+export M2_HOME="/home/mping/Devel/apache-maven-3.8.1"
+export PATH="$M2_HOME/bin:$PATH"
 
 
 # Cargo ASDF
@@ -222,6 +253,7 @@ fi
 
 # Export path with ~/.local/bin
 export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/bin
 
 
 # Fzf fuzzy search stuff
@@ -233,9 +265,12 @@ if [[ -s "$HOME/.fzf.zsh" ]]; then
 fi
 
 
+if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
+    source /etc/profile.d/vte.sh
+fi
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
-        source /etc/profile.d/vte.sh
-fi
+# local zsh
+[[ ! -f ~/.zshlocal ]] || source ~/.zshlocal
