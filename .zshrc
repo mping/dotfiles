@@ -73,6 +73,9 @@ plugins=(
   git
   dotenv
   autojump
+  # ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
+  fast-syntax-highlighting
+  kubectl
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -146,7 +149,7 @@ function makepr() {
   if [[ $remote == https* ]]; then  
     project=$(echo $remote | sed -e "s/.*$giturl\/\(.*\).git.*/\1/")
   else
-    project=$(echo $remote | sed 's%^.*:\([^:]*\)\.git$%\1%g')
+    project=$(echo $remote | sed 's/git@github.com:\(.*\).git$/\1/')
   fi
   xdg-open "https://$giturl/$project/compare/$branch?expand=1"
 }
@@ -233,6 +236,10 @@ if [[ -d "/home/mping/.asdf/installs/rust/stable/bin" ]]; then
 	export PATH="$PATH:/home/mping/.asdf/installs/rust/stable/bin"
 fi
 
+# Babashka/bbin
+if [[ -s "/home/mping/.babashka/bbin/bin" ]]; then
+	export PATH="$PATH:/home/mping/.babashka/bbin/bin"
+fi
 
 # asdf
 if [[ -s "$HOME/.asdf/asdf.sh" ]]; then
@@ -274,3 +281,9 @@ fi
 
 # local zsh
 [[ ! -f ~/.zshlocal ]] || source ~/.zshlocal
+
+PATH="/home/mping/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/mping/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/mping/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/mping/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/mping/perl5"; export PERL_MM_OPT;
